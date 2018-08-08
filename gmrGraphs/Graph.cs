@@ -19,39 +19,90 @@ namespace gmrGraphs
 
             for (int i = 0; i < verticies.Count; i++)
             {
-                if(verticies[i].Value.CompareTo(vertex.Value) == 0)
+                if (verticies[i].Value.CompareTo(vertex.Value) == 0)
                 {
                     return;
                 }
             }
 
             verticies.Add(vertex);
-            return;
+        }
+
+        public void AddVerticies(List<Vertex<T>> verticiesToAdd)
+        {
+            for (int v = 0; v < verticiesToAdd.Count; v++)
+            {
+                AddVertex(verticiesToAdd[v]);
+            }
         }
 
         public void RemoveVertex(Vertex<T> vertex)
         {
             for (int i = 0; i < verticies.Count; i++)
             {
-                if(verticies[i].Value.CompareTo(vertex.Value) == 0)
+                if (verticies[i].Value.CompareTo(vertex.Value) == 0)
                 {
+                    while (vertex.Neighbors.Count != 0)
+                    {
+                        //removes the edge between the vertex and the first neighbor entry
+                        RemoveUndirectedEdge(vertex, vertex.Neighbors[0]);
+                    }
+
                     verticies.RemoveAt(i);
                     return;
                 }
             }
-            return;
         }
 
-        public void AddEdge(Vertex<T> start, Vertex<T> end)
+        public void RemoveVerticies(List<Vertex<T>> verticiesToRemove)
         {
+            for (int v = 0; v < verticiesToRemove.Count; v++)
+            {
+                RemoveVertex(verticiesToRemove[v]);
+            }
+        }
+
+        public void AddUndirectedEdge(Vertex<T> start, Vertex<T> end)
+        {
+            if (start.Neighbors.Contains(end) == true && end.Neighbors.Contains(start) == true)
+            {
+                return;
+            }
+
             start.Neighbors.Add(end);
             end.Neighbors.Add(start);
         }
 
-        public void RemoveEdge(Vertex<T> start, Vertex<T> end)
+        public void RemoveUndirectedEdge(Vertex<T> start, Vertex<T> end)
         {
+            if (start.Neighbors.Contains(end) == false && end.Neighbors.Contains(start) == false)
+            {
+                return;
+            }
+
             start.Neighbors.Remove(end);
             end.Neighbors.Remove(start);
+        }
+
+        public void DepthFirstTraversal(Vertex<T> start)
+        {
+            start.visited = true;
+
+            //action below
+            Console.WriteLine(start.Value);
+
+            foreach (var n in start.Neighbors)
+            {
+                if (!n.visited)
+                {
+                    DepthFirstTraversal(n);
+                }
+            }
+        }
+
+        public void BreadthFirstTraversal(Vertex<T> start)
+        {
+
         }
 
     }

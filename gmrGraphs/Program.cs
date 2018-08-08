@@ -12,9 +12,22 @@ namespace gmrGraphs
         {
             Graph<string> undirGraph = new Graph<string>();
 
-            undirGraph.AddVertex(new Vertex<string>("ca"));
-            undirGraph.AddVertex(new Vertex<string>("ny"));
-            undirGraph.AddVertex(new Vertex<string>("az"));
+            var ca = new Vertex<string>("ca");
+            var ny = new Vertex<string>("ny");
+            var az = new Vertex<string>("az");
+            var hi = new Vertex<string>("hi");
+            var tx = new Vertex<string>("tx");
+
+            undirGraph.AddVerticies(new List<Vertex<string>>(new Vertex<string>[] { ca, ny, az, hi, tx }));
+
+            undirGraph.AddUndirectedEdge(ca, ny);
+            undirGraph.AddUndirectedEdge(az, ny);
+            undirGraph.AddUndirectedEdge(az, hi);
+            undirGraph.AddUndirectedEdge(hi, tx);
+            undirGraph.AddUndirectedEdge(tx, ca);
+
+            undirGraph.RemoveVerticies(new List<Vertex<string>>(new Vertex<string>[] { ca, az}));
+
 
 
             Console.ReadLine();

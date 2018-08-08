@@ -11,6 +11,7 @@ namespace gmrGraphs
         public T Value;
         //public Dictionary<Vertex<T>, double> Neighbors = new Dictionary<Vertex<T>, double>();
         public List<Vertex<T>> Neighbors = new List<Vertex<T>>();
+        public bool visited = false;
 
         public Vertex(T value)
         {
