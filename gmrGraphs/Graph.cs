@@ -86,22 +86,59 @@ namespace gmrGraphs
 
         public void DepthFirstTraversal(Vertex<T> start)
         {
+            foreach (var vertex in verticies)
+            {
+                vertex.visited = false;
+            }
+
+            DepthFirstTraversalRecursive(start, new Stack<Vertex<T>>());
+        }
+
+        private void DepthFirstTraversalRecursive(Vertex<T> start, Stack<Vertex<T>> stack)
+        {
             start.visited = true;
 
-            //action below
+            //action below (the writeline)
             Console.WriteLine(start.Value);
 
             foreach (var n in start.Neighbors)
             {
                 if (!n.visited)
                 {
-                    DepthFirstTraversal(n);
+                    stack.Push(n);
+                    DepthFirstTraversalRecursive(n, stack);
                 }
             }
         }
 
         public void BreadthFirstTraversal(Vertex<T> start)
         {
+            foreach (var vertex in verticies)
+            {
+                vertex.visited = false;
+            }
+
+            BreadthFirstTraversalRecursive(start, new Queue<Vertex<T>>());
+        }
+
+        private void BreadthFirstTraversalRecursive(Vertex<T> start, Queue<Vertex<T>> q)
+        {
+            start.visited = true;
+            Console.WriteLine($"{start.Value}");
+
+            foreach (var neighbors in start.Neighbors)
+            {
+                if (!neighbors.visited)
+                {
+                    neighbors.visited = true;
+                    q.Enqueue(neighbors);
+                }
+            }            
+
+            for (int i = 0; i < q.Count; i++)
+            {
+                BreadthFirstTraversalRecursive(q.Dequeue(), q);
+            }
 
         }
 

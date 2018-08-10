@@ -26,9 +26,11 @@ namespace gmrGraphs
             undirGraph.AddUndirectedEdge(hi, tx);
             undirGraph.AddUndirectedEdge(tx, ca);
 
-            undirGraph.RemoveVerticies(new List<Vertex<string>>(new Vertex<string>[] { ca, az}));
+            //undirGraph.RemoveVerticies(new List<Vertex<string>>(new Vertex<string>[] { ca, az}));
 
+            //undirGraph.DepthFirstTraversal(ny);
 
+            undirGraph.BreadthFirstTraversal(ny);
 
             Console.ReadLine();
         }
