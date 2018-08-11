@@ -10,6 +10,7 @@ namespace gmrGraphs
     {
         List<Vertex<T>> verticies = new List<Vertex<T>>();
 
+        /// unweighted, undirected graphs
         public void AddVertex(Vertex<T> vertex)
         {
             if (verticies.Count == 0)
@@ -45,7 +46,7 @@ namespace gmrGraphs
                     while (vertex.Neighbors.Count != 0)
                     {
                         //removes the edge between the vertex and the first neighbor entry
-                        RemoveUndirectedEdge(vertex, vertex.Neighbors[0]);
+                        RemoveUndirectedEdge(vertex, vertex.Neighbors.Keys.First());
                     }
 
                     verticies.RemoveAt(i);
@@ -64,18 +65,18 @@ namespace gmrGraphs
 
         public void AddUndirectedEdge(Vertex<T> start, Vertex<T> end)
         {
-            if (start.Neighbors.Contains(end) == true && end.Neighbors.Contains(start) == true)
+            if (start.Neighbors.ContainsKey(end) == true && end.Neighbors.ContainsKey(start) == true)
             {
                 return;
             }
 
-            start.Neighbors.Add(end);
-            end.Neighbors.Add(start);
+            start.Neighbors.Add(end, 0);
+            end.Neighbors.Add(start, 0);
         }
 
         public void RemoveUndirectedEdge(Vertex<T> start, Vertex<T> end)
         {
-            if (start.Neighbors.Contains(end) == false && end.Neighbors.Contains(start) == false)
+            if (start.Neighbors.Keys.Contains(end) == false && end.Neighbors.Keys.Contains(start) == false)
             {
                 return;
             }
@@ -101,7 +102,7 @@ namespace gmrGraphs
             //action below (the writeline)
             Console.WriteLine(start.Value);
 
-            foreach (var n in start.Neighbors)
+            foreach (var n in start.Neighbors.Keys)
             {
                 if (!n.visited)
                 {
@@ -128,10 +129,10 @@ namespace gmrGraphs
 
             foreach (var neighbors in start.Neighbors)
             {
-                if (!neighbors.visited)
+                if (!neighbors.Key.visited)
                 {
-                    neighbors.visited = true;
-                    q.Enqueue(neighbors);
+                    neighbors.Key.visited = true;
+                    q.Enqueue(neighbors.Key);
                 }
             }            
 
@@ -140,6 +141,45 @@ namespace gmrGraphs
                 BreadthFirstTraversalRecursive(q.Dequeue(), q);
             }
 
+        }
+
+
+        /// weighted, directed graphs
+        public void AddDirectedEdge(Vertex<T> start, Vertex<T> end, double weight)
+        {
+            if (start.Neighbors.ContainsKey(end) == true && start.Neighbors[end] == weight)
+            {
+                return;
+            }
+
+            start.Neighbors.Add(end, weight);
+        }
+
+        public void RemoveDirectedEdge(Vertex<T> start, Vertex<T> end)
+        {
+            if (start.Neighbors.Keys.Contains(end) == false)
+            {
+                return;
+            }
+
+            start.Neighbors.Remove(end);
+        }
+
+        public void Dijkstra(Vertex<T> start, Vertex<T> end)
+        {
+            foreach (var vertex in verticies)
+            {
+                vertex.visited = false;
+                vertex.knownDistance = float.PositiveInfinity;
+                vertex.founder = null;
+            }
+
+            MinHeap<Vertex<T>> priorityQ = new MinHeap<Vertex<T>>();
+
+            start.knownDistance = 0;
+            priorityQ.Add(start);
+                      
+            // step 3: pop
         }
 
     }
