@@ -134,7 +134,7 @@ namespace gmrGraphs
                     neighbors.Key.visited = true;
                     q.Enqueue(neighbors.Key);
                 }
-            }            
+            }
 
             for (int i = 0; i < q.Count; i++)
             {
@@ -178,8 +178,47 @@ namespace gmrGraphs
 
             start.knownDistance = 0;
             priorityQ.Add(start);
-                      
-            // step 3: pop
+
+            DijkstraRecursion(end, priorityQ);
+        }
+
+        public void DijkstraRecursion(Vertex<T> end, MinHeap<Vertex<T>> priorityQ)
+        {
+            Vertex<T> current = priorityQ.Pop();
+
+            foreach (var neighbor in current.Neighbors)
+            {
+                double tentativeDistance = current.knownDistance + neighbor.Value;
+                if (tentativeDistance < neighbor.Key.knownDistance)
+                {
+                    neighbor.Key.knownDistance = tentativeDistance;
+                    neighbor.Key.founder = current;
+                    neighbor.Key.visited = false;
+                }
+                else
+                {
+                    neighbor.Key.visited = true;
+                }
+            }
+
+            foreach (var neighbor in verticies)
+            {
+                if (neighbor.visited == false && priorityQ.Contains(neighbor) == true)
+                {
+                    priorityQ.Add(neighbor);
+                }
+            }
+
+            current.visited = true;
+
+            if (end.visited == true)
+            {
+                return;
+            }
+            else
+            {
+                DijkstraRecursion(end, priorityQ);
+            }
         }
 
     }

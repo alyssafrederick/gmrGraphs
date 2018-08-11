@@ -15,7 +15,7 @@ namespace gmrGraphs
 
 
         public bool visited = false;
-        public float knownDistance = 0;
+        public double knownDistance = 0;
         public Vertex<T> founder;
 
 

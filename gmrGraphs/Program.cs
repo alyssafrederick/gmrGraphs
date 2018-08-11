@@ -51,10 +51,9 @@ namespace gmrGraphs
             dirGraph.AddDirectedEdge(il, mi, 8);
             dirGraph.AddDirectedEdge(fl, mi, 4);
 
-            dirGraph.RemoveDirectedEdge(fl, ky);
+            dirGraph.Dijkstra(fl, mi);
 
 
-          
 
 
             Console.ReadLine();

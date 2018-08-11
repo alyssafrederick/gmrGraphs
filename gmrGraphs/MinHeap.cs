@@ -144,6 +144,25 @@ namespace gmrGraphs
             }
             Root = temp;
         }
+
+        public bool Contains(T value)
+        {
+            foreach (var item in Root)
+            {
+                if (item == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    if (item.CompareTo(value) == 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 
 }
