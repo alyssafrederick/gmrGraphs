@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace gmrGraphs
 {
-    public class MinHeap<T> where T : IComparable
+    public class MinHeap<T> where T : IComparable<T>
     {
         //min heap 
         public T[] Root;
@@ -34,41 +34,21 @@ namespace gmrGraphs
             //adding value to the next available slot
             Root[Size - 1] = value;
 
-            int valuesIndex = 0;
-            while (Root[valuesIndex].CompareTo(value) != 0)
-            {
-                valuesIndex++;
-            }
-
-            if (valuesIndex > 0)
-            {
-                while (Parent(valuesIndex).CompareTo(value) > 0)
-                {
-                    HeapifyUp(value);
-
-                    valuesIndex = 0;
-                    while (Root[valuesIndex].CompareTo(value) != 0)
-                    {
-                        valuesIndex++;
-                    }
-                }
-            }
-
+            HeapifyUp(Size - 1);
         }
 
-        public void HeapifyUp(T value)
+        public void HeapifyUp(int index)
         {
-            int valuesIndex = 0;
-            while (Root[valuesIndex].CompareTo(value) != 0)
-            {
-                valuesIndex++;
-            }
+            if (index == 0) return;
 
-            if (Parent(valuesIndex).CompareTo(value) > 0)
+            if (Root[index].CompareTo(Parent(index)) < 0)
             {
-                //switching value and its parent
-                Root[valuesIndex] = Parent(valuesIndex);
-                Root[(valuesIndex - 1) / 2] = value;
+                int p = (index - 1) / 2;
+                var temp = Root[index];
+                Root[index] = Root[p];
+                Root[p] = temp;
+
+                HeapifyUp(p);
             }
         }
 
@@ -84,53 +64,26 @@ namespace gmrGraphs
 
         public T Pop()
         {
-            if (Size > 1)
-            {
-                int index = 0;
-                return Root[0];
-                HeapifyDown(index);
-            }
+            var ret = Root[0];
+            Root[0] = Root[Size - 1];
             Size--;
-            return Root[0];
+            HeapifyDown(0);
+            return ret;
         }
 
         public void HeapifyDown(int index)
         {
-            if (((index * 2) + 1) > Size && ((index * 2) + 1) > Size)
-            {
-                //there is no children = it is at the bottom of the heap
-                return;
-            }
-            else if (((index * 2) + 2) >= Size)
-            {
-                //there is no RChild so do not swap with it = swap with LChild
-                T temp = Root[index];
-                Root[index] = LChild(index);
-                Root[(index * 2) + 1] = temp;
-                return;
-            }
-            else if (LChild(index).CompareTo(RChild(index)) > 0)
-            {
-                //LChild's value is greater = RChild's value is less
-                //want to swap with the RChild
-                T temp = Root[index];
-                Root[index] = RChild(index);
-                Root[(index * 2) + 2] = temp;
-                index = (index * 2) + 2;
-                HeapifyDown(index);
-            }
-            else if (LChild(index).CompareTo(RChild(index)) < 0)
-            {
-                //want to swap with the LChild
-                //if it swaps with the LChild, there will then be no LChild and just a RChild
-                Root[index] = LChild(index);
-                Root[(index * 2) + 1] = Root[(index * 2) + 2];
-                index = (index * 2) + 1;
-                HeapifyDown(index);
-            }
+            int smallerIndex = LChild(index).CompareTo(RChild(index)) < 0 ? (index * 2) + 1 : (index * 2) + 2;
 
-
+            if (Root[index].CompareTo(Root[smallerIndex]) < 0)
+            {
+                var temp = Root[index];
+                Root[index] = Root[smallerIndex];
+                Root[smallerIndex] = temp;
+                HeapifyDown(smallerIndex);
+            }
         }
+
 
         private void Resize(int size)
         {

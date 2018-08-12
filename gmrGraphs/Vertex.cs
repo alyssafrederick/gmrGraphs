@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace gmrGraphs
 {
-    public class Vertex<T> : IComparable where T : IComparable
+    public class Vertex<T> : IComparable<Vertex<T>> where T : IComparable<T>
     {
         public T Value;
-        
+
         public Dictionary<Vertex<T>, double> Neighbors = new Dictionary<Vertex<T>, double>();
         //public List<Vertex<T>> Neighbors = new List<Vertex<T>>();
 
@@ -19,23 +19,18 @@ namespace gmrGraphs
         public Vertex<T> founder;
 
 
+        public int x;
+        public int y;
+        public double finalDistance;
+
         public Vertex(T value)
         {
             Value = value;
         }
 
-        public int CompareTo(object obj)
+        public int CompareTo(Vertex<T> other)
         {
-            if (obj is Vertex<T>)
-            {
-                Vertex<T> vertex = (Vertex<T>)obj;
-                return vertex.Value.CompareTo(Value);
-            }
-
-            else
-            {
-                throw new Exception("you didn't give a vertex and it's comparing a vertex sooo");
-            }
+            return Value.CompareTo(other.Value);
         }
     }
 }

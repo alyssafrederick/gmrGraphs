@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace gmrGraphs
 {
-    public class Graph<T> where T : IComparable
+    public class Graph<T> where T : IComparable<T>
     {
         List<Vertex<T>> verticies = new List<Vertex<T>>();
 
@@ -165,8 +165,10 @@ namespace gmrGraphs
             start.Neighbors.Remove(end);
         }
 
-        public void Dijkstra(Vertex<T> start, Vertex<T> end)
+        public IEnumerable<Vertex<T>> Dijkstra(Vertex<T> start, Vertex<T> end)
         {
+            //primms
+
             foreach (var vertex in verticies)
             {
                 vertex.visited = false;
@@ -179,47 +181,67 @@ namespace gmrGraphs
             start.knownDistance = 0;
             priorityQ.Add(start);
 
-            DijkstraRecursion(end, priorityQ);
+            while (priorityQ.Size != 0)
+            {
+                Vertex<T> current = priorityQ.Pop();
+                current.visited = true;
+
+                if (current == end)
+                {
+                    break;
+                }
+
+
+                foreach (var neighbor in current.Neighbors)
+                {
+                    double tentativeDistance = current.knownDistance + neighbor.Value;
+                    if (tentativeDistance < neighbor.Key.knownDistance)
+                    {
+                        neighbor.Key.knownDistance = tentativeDistance;
+                        neighbor.Key.founder = current;
+                        neighbor.Key.visited = false;
+                    }
+                    else
+                    {
+                        neighbor.Key.visited = true;
+                    }
+
+                    if (neighbor.Key.visited == false && priorityQ.Contains(neighbor.Key) == false)
+                    {
+                        priorityQ.Add(neighbor.Key);
+                    }
+                }
+            }
+
+            //start and end and work back
+            var stack = new Stack<Vertex<T>>();
+            stack.Push(end);
+            while (stack.Peek() != start)
+            {
+                stack.Push(stack.Peek().founder);
+            }
+
+            return stack;
         }
 
-        public void DijkstraRecursion(Vertex<T> end, MinHeap<Vertex<T>> priorityQ)
+        public IEnumerable<Vertex<T>> AStar(Vertex<T> start, Vertex<T> end)
         {
-            Vertex<T> current = priorityQ.Pop();
-
-            foreach (var neighbor in current.Neighbors)
+            foreach (var vertex in verticies)
             {
-                double tentativeDistance = current.knownDistance + neighbor.Value;
-                if (tentativeDistance < neighbor.Key.knownDistance)
-                {
-                    neighbor.Key.knownDistance = tentativeDistance;
-                    neighbor.Key.founder = current;
-                    neighbor.Key.visited = false;
-                }
-                else
-                {
-                    neighbor.Key.visited = true;
-                }
+                vertex.visited = false;
+                vertex.knownDistance = float.PositiveInfinity;
+                vertex.finalDistance = float.PositiveInfinity;
+                vertex.founder = null;
             }
 
-            foreach (var neighbor in verticies)
-            {
-                if (neighbor.visited == false && priorityQ.Contains(neighbor) == true)
-                {
-                    priorityQ.Add(neighbor);
-                }
-            }
+            MinHeap<Vertex<T>> priorityQ = new MinHeap<Vertex<T>>();
 
-            current.visited = true;
+            start.knownDistance = 0;
+            priorityQ.Add(start);
 
-            if (end.visited == true)
-            {
-                return;
-            }
-            else
-            {
-                DijkstraRecursion(end, priorityQ);
-            }
+            throw new NotImplementedException();
         }
-
     }
+
+
 }
