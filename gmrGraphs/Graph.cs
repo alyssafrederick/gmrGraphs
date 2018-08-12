@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace gmrGraphs
 {
-    public class Graph<T> where T : IComparable<T>
+    public class Graph<T>
     {
         List<Vertex<T>> verticies = new List<Vertex<T>>();
 
@@ -20,7 +20,7 @@ namespace gmrGraphs
 
             for (int i = 0; i < verticies.Count; i++)
             {
-                if (verticies[i].Value.CompareTo(vertex.Value) == 0)
+                if (verticies[i].Value.Equals(vertex.Value))
                 {
                     return;
                 }
@@ -41,7 +41,7 @@ namespace gmrGraphs
         {
             for (int i = 0; i < verticies.Count; i++)
             {
-                if (verticies[i].Value.CompareTo(vertex.Value) == 0)
+                if (verticies[i].Value.Equals(vertex.Value))
                 {
                     while (vertex.Neighbors.Count != 0)
                     {
@@ -176,7 +176,7 @@ namespace gmrGraphs
                 vertex.founder = null;
             }
 
-            MinHeap<Vertex<T>> priorityQ = new MinHeap<Vertex<T>>();
+            Heap<Vertex<T>> priorityQ = new Heap<Vertex<T>>(Comparer<Vertex<T>>.Create(CompareKnown));
 
             start.knownDistance = 0;
             priorityQ.Add(start);
@@ -213,7 +213,7 @@ namespace gmrGraphs
                 }
             }
 
-            //start and end and work back
+            //start at end and work back
             var stack = new Stack<Vertex<T>>();
             stack.Push(end);
             while (stack.Peek() != start)
@@ -234,12 +234,79 @@ namespace gmrGraphs
                 vertex.founder = null;
             }
 
-            MinHeap<Vertex<T>> priorityQ = new MinHeap<Vertex<T>>();
+            Heap<Vertex<T>> priorityQ = new Heap<Vertex<T>>(Comparer<Vertex<T>>.Create(CompareFinal));
 
             start.knownDistance = 0;
+            start.finalDistance = ManhattanHeuristic(start, end);
             priorityQ.Add(start);
 
-            throw new NotImplementedException();
+            while (priorityQ.Size < 0)
+            {
+                Vertex<T> current = priorityQ.Pop();
+                current.visited = true;
+
+                if (current == end)
+                {
+                    break;
+                }
+
+                foreach (var neighbor in current.Neighbors)
+                {
+                    double tentativeDistance = current.knownDistance + neighbor.Value;
+                    if (tentativeDistance < neighbor.Key.knownDistance)
+                    {
+                        neighbor.Key.knownDistance = tentativeDistance;
+                        neighbor.Key.founder = current;
+                        neighbor.Key.finalDistance = neighbor.Key.knownDistance + ManhattanHeuristic(neighbor.Key, end);
+                        neighbor.Key.visited = false;
+                    }
+                    else
+                    {
+                        neighbor.Key.visited = true;
+                    }
+
+                    if (neighbor.Key.visited == false && priorityQ.Contains(neighbor.Key) == false)
+                    {
+                        priorityQ.Add(neighbor.Key);
+                    }
+                }
+            }
+
+            ////////////LOOK AT THIS: there ends up being a null in the stack...
+            var stack = new Stack<Vertex<T>>();
+            stack.Push(end);
+            while (stack.Peek() != start)
+            {
+                stack.Push(stack.Peek().founder);
+            }
+
+            return stack;
+        }
+
+        public double D = 1;
+
+        public double ManhattanHeuristic(Vertex<T> start, Vertex<T> end)
+        {
+            double dx = Math.Abs(start.Position.X - end.Position.X);
+            double dy = Math.Abs(start.Position.Y - end.Position.Y);
+            return D * (dx + dy);
+        }
+
+        public double EuclideanHeuristic(Vertex<T> start, Vertex<T> end)
+        {
+            double dx = Math.Abs(start.Position.X - end.Position.X);
+            double dy = Math.Abs(start.Position.Y - end.Position.Y);
+            return D * Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        private int CompareKnown(Vertex<T> x, Vertex<T> y)
+        {
+            return x.knownDistance.CompareTo(y.knownDistance);
+        }
+
+        private int CompareFinal(Vertex<T> x, Vertex<T> y)
+        {
+            return x.finalDistance.CompareTo(y.finalDistance);
         }
     }
 

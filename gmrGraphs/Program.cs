@@ -19,11 +19,11 @@ namespace gmrGraphs
             var hi = new Vertex<string>("hi");
             var tx = new Vertex<string>("tx");
 
-            var mi = new Vertex<string>("mi");
-            var oh = new Vertex<string>("oh");
-            var fl = new Vertex<string>("fl");
-            var ky = new Vertex<string>("ky");
-            var il = new Vertex<string>("il");
+            var mi = new Vertex<string>("mi", 1 , 1);
+            var oh = new Vertex<string>("oh", 10, 1);
+            var fl = new Vertex<string>("fl", 10, 7);
+            var ky = new Vertex<string>("ky", 5, 10);
+            var il = new Vertex<string>("il", 1, 7);
 
 
 
@@ -52,7 +52,7 @@ namespace gmrGraphs
             dirGraph.AddDirectedEdge(fl, mi, 4);
 
             dirGraph.Dijkstra(fl, mi);
-
+            dirGraph.AStar(fl, mi);
 
 
 

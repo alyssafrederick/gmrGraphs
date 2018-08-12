@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 
 namespace gmrGraphs
 {
-    public class MinHeap<T> where T : IComparable<T>
+
+    public class Heap<T>
     {
         //min heap 
         public T[] Root;
         public int Size = 0;
 
-        public MinHeap()
+        IComparer<T> comparer;
+
+        public Heap(IComparer<T> comparer)
         {
             //set the array to have 30 slots so we don't have to constantly resize
             Root = new T[30];
+            this.comparer = comparer;
         }
 
         public T Parent(int index)
@@ -41,7 +45,7 @@ namespace gmrGraphs
         {
             if (index == 0) return;
 
-            if (Root[index].CompareTo(Parent(index)) < 0)
+            if (comparer.Compare(Root[index], Parent(index)) < 0)
             {
                 int p = (index - 1) / 2;
                 var temp = Root[index];
@@ -54,11 +58,21 @@ namespace gmrGraphs
 
         public T LChild(int index)
         {
+            if (index < 0 || index >= Root.Length)
+            {
+                return default(T);
+            }
+
             return Root[(index * 2) + 1];
         }
 
         public T RChild(int index)
         {
+            if (index < 0 || index >= Root.Length)
+            {
+                return default(T);
+            }
+
             return Root[(index * 2) + 2];
         }
 
@@ -73,9 +87,21 @@ namespace gmrGraphs
 
         public void HeapifyDown(int index)
         {
-            int smallerIndex = LChild(index).CompareTo(RChild(index)) < 0 ? (index * 2) + 1 : (index * 2) + 2;
+            var left = LChild(index);
+            var right = RChild(index);
+            int smallerIndex = (index * 2) + 1;
 
-            if (Root[index].CompareTo(Root[smallerIndex]) < 0)
+            if (left == null)
+            {
+                return;
+            }
+
+            if (right != null)
+            {
+                smallerIndex = comparer.Compare(left, right) < 0 ? (index * 2) + 1 : (index * 2) + 2;
+            }
+
+            if (comparer.Compare(Root[index], Root[smallerIndex]) < 0)
             {
                 var temp = Root[index];
                 Root[index] = Root[smallerIndex];
@@ -108,7 +134,7 @@ namespace gmrGraphs
                 }
                 else
                 {
-                    if (item.CompareTo(value) == 0)
+                    if (item.Equals(value))
                     {
                         return true;
                     }
