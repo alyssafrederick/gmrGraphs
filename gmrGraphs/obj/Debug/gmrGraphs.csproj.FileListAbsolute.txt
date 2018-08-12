@@ -1,7 +1,0 @@
-c:\users\alyssafrederick\documents\visual studio 2015\Projects\gmrGraphs\gmrGraphs\bin\Debug\gmrGraphs.exe.config
-C:\Users\AlyssaFrederick\Documents\github\gmrGraphs\gmrGraphs\bin\Debug\gmrGraphs.exe.config
-C:\Users\AlyssaFrederick\Documents\github\gmrGraphs\gmrGraphs\bin\Debug\gmrGraphs.exe
-C:\Users\AlyssaFrederick\Documents\github\gmrGraphs\gmrGraphs\bin\Debug\gmrGraphs.pdb
-C:\Users\AlyssaFrederick\Documents\github\gmrGraphs\gmrGraphs\obj\Debug\gmrGraphs.csprojResolveAssemblyReference.cache
-C:\Users\AlyssaFrederick\Documents\github\gmrGraphs\gmrGraphs\obj\Debug\gmrGraphs.exe
-C:\Users\AlyssaFrederick\Documents\github\gmrGraphs\gmrGraphs\obj\Debug\gmrGraphs.pdb
