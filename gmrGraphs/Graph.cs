@@ -240,7 +240,7 @@ namespace gmrGraphs
             start.finalDistance = ManhattanHeuristic(start, end);
             priorityQ.Add(start);
 
-            while (priorityQ.Size < 0)
+            while (priorityQ.Size > 0)
             {
                 Vertex<T> current = priorityQ.Pop();
                 current.visited = true;
@@ -271,8 +271,7 @@ namespace gmrGraphs
                     }
                 }
             }
-
-            ////////////LOOK AT THIS: there ends up being a null in the stack...
+            
             var stack = new Stack<Vertex<T>>();
             stack.Push(end);
             while (stack.Peek() != start)

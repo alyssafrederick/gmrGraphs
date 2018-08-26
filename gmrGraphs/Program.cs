@@ -49,10 +49,10 @@ namespace gmrGraphs
             dirGraph.AddDirectedEdge(fl, ky, 7);
             dirGraph.AddDirectedEdge(ky, il, 1);
             dirGraph.AddDirectedEdge(il, mi, 8);
-            dirGraph.AddDirectedEdge(fl, mi, 4);
+            dirGraph.AddDirectedEdge(fl, mi, 20);
 
             dirGraph.Dijkstra(fl, mi);
-            dirGraph.AStar(fl, mi);
+            var aStar = dirGraph.AStar(fl, mi);
 
 
 
